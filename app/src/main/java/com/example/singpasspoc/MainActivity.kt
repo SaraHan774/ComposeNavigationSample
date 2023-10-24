@@ -18,20 +18,26 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navDeepLink
-import com.example.singpasspoc.ui.theme.SingpassPoTheme
+import com.example.singpasspoc.ui.theme.SingpassTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            SingpassPoTheme {
+            SingpassTheme {
                 // A surface container using the 'background' color from the theme
                 val navController = rememberNavController()
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    SingpassNavHost(navController)
+                    SingpassNavHost(
+                        navController = navController,
+                        onNavigateNonResident = {
+                            /*FIXME: startActivity(
+                                Intent()
+                            )*/
+                        })
                 }
             }
         }
@@ -39,7 +45,10 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun SingpassNavHost(navController: NavHostController) {
+fun SingpassNavHost(
+    navController: NavHostController,
+    onNavigateNonResident: () -> Unit,
+) {
     val uri = "https://www.example.com"
 
     NavHost(navController = navController, startDestination = "areYouResident") {
@@ -47,6 +56,10 @@ fun SingpassNavHost(navController: NavHostController) {
             AreYouResidentScreen(
                 onNavigateResident = {
                     navController.navigate(deepLink = "$uri/HELLO_WORLD".toUri())
+                },
+                onNavigateNonResident = {
+                    // fire an intent
+                    onNavigateNonResident()
                 }
             )
         }
@@ -79,10 +92,16 @@ fun ResidentInfoScreen(authCode: String) {
 }
 
 @Composable
-fun AreYouResidentScreen(onNavigateResident: () -> Unit) {
+fun AreYouResidentScreen(
+    onNavigateResident: () -> Unit,
+    onNavigateNonResident: () -> Unit,
+) {
     Column(modifier = Modifier.fillMaxSize()) {
         Button(onClick = { onNavigateResident() }) {
-            Text(text = "Are you resident?")
+            Text(text = "Resident")
+        }
+        Button(onClick = { onNavigateNonResident() }) {
+            Text(text = "Non-Resident")
         }
     }
 }
@@ -98,7 +117,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    SingpassPoTheme {
+    SingpassTheme {
         Greeting("Android")
     }
 }
