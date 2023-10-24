@@ -1,6 +1,8 @@
 package com.example.singpasspoc
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
@@ -42,6 +44,11 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        Log.d("===" , "intent = $intent")
+    }
 }
 
 @Composable
@@ -49,7 +56,7 @@ fun SingpassNavHost(
     navController: NavHostController,
     onNavigateNonResident: () -> Unit,
 ) {
-    val uri = "https://www.example.com"
+    val uri = "august://main"
 
     NavHost(navController = navController, startDestination = "areYouResident") {
         composable("areYouResident") {

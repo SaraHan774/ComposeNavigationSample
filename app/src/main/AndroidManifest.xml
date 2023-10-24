@@ -20,8 +20,8 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-
-                <data android:scheme="https" android:host="www.example.com"/>
+                <data android:scheme="august"/>
+                <data android:host="main"/>
             </intent-filter>
         </activity>
     </application>
